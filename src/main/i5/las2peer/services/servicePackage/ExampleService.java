@@ -84,7 +84,7 @@ public class ExampleService extends Service {
 	private String jdbcSchema;
 	private DatabaseManager dbm;
 
-	public ExampleServicee() {
+	public ExampleService() {
 		// read and set properties values
 		// IF THE SERVICE CLASS NAME IS CHANGED, THE PROPERTIES FILE NAME NEED TO BE CHANGED TOO!
 		setFieldValues();
