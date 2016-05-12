@@ -1,4 +1,4 @@
-<project name="las2peer-Example-Project" default="all" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="las2peer-Examples" default="all" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
     
     <property file="etc/ant_configuration/user.properties"/>
     <property file="etc/ant_configuration/service.properties"/>
@@ -64,7 +64,7 @@
     
     
     <!-- Get Dependencies from our Maven Repository via Ivy -->
-    <target name="get_deps" depends="install-ivy" description="--> resolve dependencies">
+    <target name="get_deps" depends="install-ivy, init_deps" description="--> resolve dependencies">
         <ivy:settings>
             <credentials host="role.dbis.rwth-aachen.de:9911/archiva"  realm="Repository internal"/>
         </ivy:settings>
@@ -74,6 +74,11 @@
     
     
     <!-- Initialization (Folder Creation)-->
+	<target name="init_deps">
+        <mkdir dir="${lib}" />
+        <mkdir dir="${service}" />
+    </target>
+	
     <target name="init_general">
         <tstamp/>
         <mkdir dir="${tmp}" />
@@ -160,23 +165,42 @@ pause
     
     <!-- Generate Jars -->
     <target name="jar" depends="compile_main" description="--> jar">
-        <jar jarfile="${export.jars}/${service.name}-${service.version}.jar">
-            <fileset dir="${tmp.classes}" includes="${service.path}/**" />
+        <jar jarfile="${export.jars}/${service.0.name}-${service.0.version}.jar">
+            <fileset dir="${tmp.classes}" includes="${service.0.path}/**" />
             <manifest>
-                <attribute name="Library-Version" value="${service.version}" />
-                <attribute name="Library-SymbolicName" value="${service.name}" />
-            	<attribute name="Import-Library" value="${service.dependencies}" />
+                <attribute name="Library-Version" value="${service.0.version}" />
+                <attribute name="Library-SymbolicName" value="${service.0.name}" />
+            	<attribute name="Import-Library" value="${service.0.dependencies}" />
             </manifest>
         </jar>
-        <!-- Add the same Jar to the Service Directory !-->
-        <jar jarfile="${service}/${service.name}-${service.version}.jar">
-            <fileset dir="${tmp.classes}" includes="${service.path}/**" />
+        <jar jarfile="${export.jars}/${service.1.name}-${service.1.version}.jar">
+            <fileset dir="${tmp.classes}" includes="${service.1.path}/**" />
             <manifest>
-                <attribute name="Library-Version" value="${service.version}" />
-                <attribute name="Library-SymbolicName" value="${service.name}" />
-            	<attribute name="Import-Library" value="${service.dependencies}" />
+                <attribute name="Library-Version" value="${service.1.version}" />
+                <attribute name="Library-SymbolicName" value="${service.1.name}" />
+            	<attribute name="Import-Library" value="${service.1.dependencies}" />
             </manifest>
         </jar>
+        <jar jarfile="${export.jars}/${service.1.name}-${service.2.version}.jar">
+            <fileset dir="${tmp.classes}" includes="${service.2.path}/**" />
+            <manifest>
+                <attribute name="Library-Version" value="${service.2.version}" />
+                <attribute name="Library-SymbolicName" value="${service.2.name}" />
+            	<attribute name="Import-Library" value="${service.2.dependencies}" />
+            </manifest>
+        </jar>
+        <jar jarfile="${export.jars}/${service.3.name}-${service.3.version}.jar">
+            <fileset dir="${tmp.classes}" includes="${service.3.path}/**" />
+            <manifest>
+                <attribute name="Library-Version" value="${service.3.version}" />
+                <attribute name="Library-SymbolicName" value="${service.3.name}" />
+            	<attribute name="Import-Library" value="${service.3.dependencies}" />
+            </manifest>
+        </jar>
+    	
+    	<copy todir="${service}">
+    	    <fileset dir="${export.jars}"/>
+    	</copy>
     </target>
     
     

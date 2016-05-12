@@ -1,4 +1,4 @@
-package i5.las2peer.services.servicePackage.rmi;
+package i5.las2peer.services.rmiForeign;
 
 import i5.las2peer.api.Service;
 

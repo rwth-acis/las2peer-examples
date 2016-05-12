@@ -1,4 +1,4 @@
-package i5.las2peer.services.servicePackage;
+package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +15,8 @@ import i5.las2peer.p2p.LocalNode;
 import i5.las2peer.p2p.ServiceNameVersion;
 import i5.las2peer.security.ServiceAgent;
 import i5.las2peer.security.UserAgent;
-import i5.las2peer.services.servicePackage.rmi.RMIMyService;
+import i5.las2peer.services.rmi.RMIMyService;
+import i5.las2peer.services.servicePackage.ExampleService;
 import i5.las2peer.testing.MockAgentFactory;
 import i5.las2peer.webConnector.WebConnector;
 import i5.las2peer.webConnector.client.ClientResponse;
