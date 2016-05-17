@@ -25,7 +25,7 @@ import i5.las2peer.restMapper.tools.ValidationResult;
 import i5.las2peer.restMapper.tools.XMLCheck;
 import i5.las2peer.security.UserAgent;
 import i5.las2peer.services.servicePackage.database.DatabaseManager;
-import i5.las2peer.services.servicePackage.storage.StorageService;
+import i5.las2peer.services.storage.StorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,7 +38,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 /**
- * LAS2peer Service
+ * las2peer Service
  * 
  * This is a example for a very basic LAS2peer service
  * that uses the LAS2peer Web-Connector for RESTful access to it.
@@ -55,7 +55,7 @@ import net.minidev.json.JSONValue;
 @Api
 @SwaggerDefinition(
 		info = @Info(
-				title = "LAS2peer Example Service",
+				title = "las2peer Example Service",
 				version = "0.1",
 				description = "A LAS2peer Example Service for demonstration purposes.",
 				termsOfService = "http://your-terms-of-service-url.com",

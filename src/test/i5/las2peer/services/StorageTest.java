@@ -1,4 +1,4 @@
-package i5.las2peer.services.servicePackage;
+package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,8 +14,8 @@ import i5.las2peer.p2p.PastryNodeImpl;
 import i5.las2peer.p2p.PastryNodeImpl.STORAGE_MODE;
 import i5.las2peer.p2p.ServiceNameVersion;
 import i5.las2peer.security.ServiceAgent;
-import i5.las2peer.services.servicePackage.storage.MyStorageObject;
-import i5.las2peer.services.servicePackage.storage.StorageService;
+import i5.las2peer.services.storage.MyStorageObject;
+import i5.las2peer.services.storage.StorageService;
 import i5.las2peer.tools.ColoredOutput;
 
 /**

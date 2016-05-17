@@ -1,4 +1,4 @@
-package i5.las2peer.services.servicePackage.storage;
+package i5.las2peer.services.storage;
 
 import java.io.Serializable;
 
