@@ -72,7 +72,7 @@ public class RMITest {
 	public void testRMIOne() {
 		// trigger method call in developer defined service
 		try {
-			String result = (String) myServiceNode.invokeLocally(myService.getId(),
+			String result = (String) myServiceNode.invokeLocally(myService,
 					new ServiceNameVersion(RMIMyService.class.getName(),"1.0"), "callRMIOne", new Serializable[] {});
 			System.out.println("The RMI call returned: " + result);
 			assertEquals(result, RMIForeignService.TEST_STRING);
@@ -85,7 +85,7 @@ public class RMITest {
 	public void testRMITwo() {
 		// trigger method call in developer defined service
 		try {
-			int result = (int) myServiceNode.invokeLocally(myService.getId(),
+			int result = (int) myServiceNode.invokeLocally(myService,
 					new ServiceNameVersion(RMIMyService.class.getName(),"1.0"), "callRMITwo", new Serializable[] {});
 			System.out.println("The RMI call returned: " + result);
 			assertEquals(result, RMIMyService.TEST_RESULT);
