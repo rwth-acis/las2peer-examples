@@ -61,10 +61,10 @@ public class StorageTest {
 		String identifier = TEST_STORAGE_ID + new Random().nextInt();
 		// this is the test object that will be persisted
 		MyStorageObject exampleObj = new MyStorageObject("Hello world!");
-		storageServiceNode.invokeLocally(storageService.getId(), new ServiceNameVersion(StorageService.class.getCanonicalName(),"1.0"),
+		storageServiceNode.invokeLocally(storageService, new ServiceNameVersion(StorageService.class.getCanonicalName(),"1.0"),
 				"persistObject", new Serializable[] { identifier, exampleObj });
 		// retrieve test object again from network
-		MyStorageObject result = (MyStorageObject) storageServiceNode.invokeLocally(storageService.getId(),
+		MyStorageObject result = (MyStorageObject) storageServiceNode.invokeLocally(storageService,
 				new ServiceNameVersion(StorageService.class.getCanonicalName(),"1.0"), "fetchObject", new Serializable[] { identifier });
 		System.out.println("Success! Received test object with message: " + result.getMsg());
 		assertEquals(exampleObj.getMsg(), result.getMsg());
