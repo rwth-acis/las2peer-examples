@@ -102,6 +102,7 @@ public class ExampleService extends Service {
 	 * (since this is done previously by LAS2peer itself, the user does not reach this method
 	 * if he or she is not authenticated).
 	 * 
+	 * @return Returns an HTTPresponse with status code and message.
 	 */
 	@GET
 	@Path("/validation")
@@ -143,8 +144,8 @@ public class ExampleService extends Service {
 	/**
 	 * Example method that returns a phrase containing the received input.
 	 * 
-	 * @param myInput
-	 * 
+	 * @param myInput Some input string that is repeated in the answer.
+	 * @return Returns an HTTPresponse with status code and message.
 	 */
 	@POST
 	@Path("/myResourcePath/{input}")
@@ -169,6 +170,8 @@ public class ExampleService extends Service {
 	 * WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! 
 	 * IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.
 	 * 
+	 * @param username The username for which the email address should be retrieved.
+	 * @return Returns an HTTPresponse with status code and message.
 	 */
 	@GET
 	@Path("/userEmail/{username}")
@@ -268,6 +271,9 @@ public class ExampleService extends Service {
 	 * WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! 
 	 * IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.
 	 * 
+	 * @param username The username which email address should be changed.
+	 * @param email The new email address that should be set for the given username.
+	 * @return Returns an HTTPresponse with status code and message.
 	 */
 	@POST
 	@Path("/userEmail/{username}/{email}")
