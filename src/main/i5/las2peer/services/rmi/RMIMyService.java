@@ -1,11 +1,11 @@
 package i5.las2peer.services.rmi;
 
-import java.io.Serializable;
-
 import i5.las2peer.api.Service;
 import i5.las2peer.logging.L2pLogger;
 import i5.las2peer.logging.NodeObserver.Event;
 import i5.las2peer.services.rmiForeign.RMIForeignService;
+
+import java.io.Serializable;
 
 /**
  * This is the developer defined service used for the RMI call example. It represents your own LAS2peer service that
@@ -27,6 +27,7 @@ public class RMIMyService extends Service {
 	public String callRMIOne() {
 		try {
 			// RMI call without parameters
+			// !!! Remember to set the first parameter to the canonical name of the invoked service class:
 			Object result = this.invokeServiceMethod(RMIForeignService.class.getCanonicalName(), "serviceMethodOne",
 					new Serializable[] {});
 			if (result != null) {

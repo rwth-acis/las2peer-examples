@@ -1,6 +1,13 @@
 package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
+import i5.las2peer.p2p.PastryNodeImpl;
+import i5.las2peer.p2p.PastryNodeImpl.STORAGE_MODE;
+import i5.las2peer.p2p.ServiceNameVersion;
+import i5.las2peer.security.ServiceAgent;
+import i5.las2peer.services.rmi.RMIMyService;
+import i5.las2peer.services.rmiForeign.RMIForeignService;
+import i5.las2peer.tools.ColoredOutput;
 
 import java.io.Serializable;
 
@@ -10,13 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mpisws.p2p.transport.multiaddress.MultiInetSocketAddress;
 
-import i5.las2peer.p2p.PastryNodeImpl;
-import i5.las2peer.p2p.PastryNodeImpl.STORAGE_MODE;
-import i5.las2peer.p2p.ServiceNameVersion;
-import i5.las2peer.security.ServiceAgent;
-import i5.las2peer.services.rmi.RMIMyService;
-import i5.las2peer.services.rmiForeign.RMIForeignService;
-import i5.las2peer.tools.ColoredOutput;
 import rice.pastry.socket.SocketPastryNodeFactory;
 
 public class RMITest {
@@ -39,7 +39,8 @@ public class RMITest {
 					null);
 			foreignServiceNode.launch();
 			// start foreign service
-			foreignService = ServiceAgent.createServiceAgent(new ServiceNameVersion(RMIForeignService.class.getName(),"1.0"), "test-service-pass");
+			foreignService = ServiceAgent.createServiceAgent(new ServiceNameVersion(RMIForeignService.class.getName(),
+					"1.0"), "test-service-pass");
 			foreignService.unlockPrivateKey("test-service-pass");
 			foreignServiceNode.registerReceiver(foreignService);
 			// to link both nodes get the address the foreign service node listens to
@@ -48,11 +49,12 @@ public class RMITest {
 					.get(SocketPastryNodeFactory.PROXY_ADDRESS);
 			String strAddr = addr.getAddress(0).getHostString();
 			// start developer defined service that uses the foreign service for RMI calls
-			myServiceNode = new PastryNodeImpl(MY_SERVICE_NODE_PORT,
-					strAddr + ":" + FOREIGN_SERVICE_NODE_PORT, STORAGE_MODE.memory, false, null, null);
+			myServiceNode = new PastryNodeImpl(MY_SERVICE_NODE_PORT, strAddr + ":" + FOREIGN_SERVICE_NODE_PORT,
+					STORAGE_MODE.memory, false, null, null);
 			myServiceNode.launch();
 			// start developer defined service
-			myService = ServiceAgent.createServiceAgent(new ServiceNameVersion(RMIMyService.class.getName(),"1.0"), "test-service-pass");
+			myService = ServiceAgent.createServiceAgent(new ServiceNameVersion(RMIMyService.class.getName(), "1.0"),
+					"test-service-pass");
 			myService.unlockPrivateKey("test-service-pass");
 			myServiceNode.registerReceiver(myService);
 		} catch (Exception e) {
@@ -72,8 +74,8 @@ public class RMITest {
 	public void testRMIOne() {
 		// trigger method call in developer defined service
 		try {
-			String result = (String) myServiceNode.invokeLocally(myService,
-					new ServiceNameVersion(RMIMyService.class.getName(),"1.0"), "callRMIOne", new Serializable[] {});
+			String result = (String) myServiceNode.invoke(myService,
+					new ServiceNameVersion(RMIMyService.class.getName(), "1.0"), "callRMIOne", new Serializable[] {});
 			System.out.println("The RMI call returned: " + result);
 			assertEquals(result, RMIForeignService.TEST_STRING);
 		} catch (Exception e) {
@@ -85,8 +87,8 @@ public class RMITest {
 	public void testRMITwo() {
 		// trigger method call in developer defined service
 		try {
-			int result = (int) myServiceNode.invokeLocally(myService,
-					new ServiceNameVersion(RMIMyService.class.getName(),"1.0"), "callRMITwo", new Serializable[] {});
+			int result = (int) myServiceNode.invoke(myService, new ServiceNameVersion(RMIMyService.class.getName(),
+					"1.0"), "callRMITwo", new Serializable[] {});
 			System.out.println("The RMI call returned: " + result);
 			assertEquals(result, RMIMyService.TEST_RESULT);
 		} catch (Exception e) {
