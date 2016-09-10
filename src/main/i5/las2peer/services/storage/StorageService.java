@@ -1,6 +1,5 @@
 package i5.las2peer.services.storage;
 
-import java.io.Serializable;
 import java.util.logging.Level;
 
 import i5.las2peer.api.Service;
@@ -19,7 +18,7 @@ public class StorageService extends Service {
 
 	/**
 	 * This method stores an object inside the LAS2peer network storage. The type of the object is not limited, any
-	 * class that implements the {@link Serializable} interface can be used.
+	 * class that implements the {@link java.io.Serializable} interface can be used.
 	 * 
 	 * @param identifier This identifier is used to identify the stored object inside the network.
 	 * @param object The object that should actually be stored in network storage.
@@ -29,23 +28,17 @@ public class StorageService extends Service {
 			Envelope env = null;
 			try {
 				// fetch existing container object from network storage
-				env = getContext().getStoredObject(MyStorageObject.class, identifier);
+				env = getContext().fetchEnvelope(identifier);
+				// place the new object inside container
+				env = getContext().createEnvelope(identifier, object);
 			} catch (Exception e) {
 				// write info message to logfile and console
 				logger.log(Level.INFO, "Network storage container not found. Creating new one. " + e.toString());
 				// create new container object with current ServiceAgent as owner
-				env = Envelope.createClassIdEnvelope(object, identifier, getAgent());
+				env = getContext().createEnvelope(identifier, object);
 			}
-			// decrypt envelope with owner instance
-			env.open(getAgent());
-			// place the new object inside container
-			env.updateContent(object);
-			// sign content with current ServiceAgent to grant exclusive writing access (see wiki for details)
-			env.addSignature(getAgent());
 			// upload the updated storage container back to the network
-			env.store();
-			// close local instance to prevent unauthorized reading while waiting for garbage collection
-			env.close();
+			getContext().storeEnvelope(env);
 		} catch (Exception e) {
 			// write error to logfile and console
 			logger.log(Level.SEVERE, "Can't persist to network storage!", e);
@@ -56,7 +49,7 @@ public class StorageService extends Service {
 
 	/**
 	 * This method fetches an object from the LAS2peer network storage. The return type is not limited, any class that
-	 * implements the {@link Serializable} interface can be used.
+	 * implements the {@link java.io.Serializable} interface can be used.
 	 * 
 	 * @param identifier This identifier is used to identify the storage object inside the network.
 	 * @return Returns the fetched object or null if an error occurred.
@@ -64,13 +57,9 @@ public class StorageService extends Service {
 	public MyStorageObject fetchObject(String identifier) {
 		try {
 			// fetch existing container object from network storage
-			Envelope env = getContext().getStoredObject(MyStorageObject.class, identifier);
-			// decrypt envelope with owner instance
-			env.open(getAgent());
+			Envelope env = getContext().fetchEnvelope(identifier);
 			// deserialize content from envelope
-			MyStorageObject retrieved = env.getContent(MyStorageObject.class);
-			// close local instance to prevent unauthorized reading while waiting for garbage collection
-			env.close();
+			MyStorageObject retrieved = (MyStorageObject) env.getContent();
 			return retrieved;
 		} catch (Exception e) {
 			// write error to logfile and console
