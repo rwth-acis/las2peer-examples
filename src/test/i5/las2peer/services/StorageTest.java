@@ -11,11 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import i5.las2peer.p2p.PastryNodeImpl;
-import i5.las2peer.p2p.PastryNodeImpl.STORAGE_MODE;
 import i5.las2peer.p2p.ServiceNameVersion;
 import i5.las2peer.security.ServiceAgent;
 import i5.las2peer.services.storage.MyStorageObject;
 import i5.las2peer.services.storage.StorageService;
+import i5.las2peer.testing.TestSuite;
 import i5.las2peer.tools.ColoredOutput;
 
 /**
@@ -24,7 +24,6 @@ import i5.las2peer.tools.ColoredOutput;
  */
 public class StorageTest {
 
-	private static final int STORAGE_SERVICE_NODE_PORT = 30200;
 	private static final String TEST_STORAGE_ID = "test-storage";
 
 	private static PastryNodeImpl storageServiceNode;
@@ -36,11 +35,10 @@ public class StorageTest {
 			System.out.println("starting test network...");
 			ColoredOutput.allOff();
 			// start storage service node as standalone network
-			storageServiceNode = new PastryNodeImpl(STORAGE_SERVICE_NODE_PORT, null, STORAGE_MODE.memory, false, null,
-					null);
-			storageServiceNode.launch();
+			storageServiceNode = TestSuite.launchNetwork(1).get(0);
 			// start storage service
-			storageService = ServiceAgent.createServiceAgent(new ServiceNameVersion(StorageService.class.getName(),"1.0"), "test-service-pass");
+			storageService = ServiceAgent.createServiceAgent(
+					new ServiceNameVersion(StorageService.class.getName(), "1.0"), "test-service-pass");
 			storageService.unlockPrivateKey("test-service-pass");
 			storageServiceNode.registerReceiver(storageService);
 		} catch (Exception e) {
@@ -61,11 +59,13 @@ public class StorageTest {
 		String identifier = TEST_STORAGE_ID + new Random().nextInt();
 		// this is the test object that will be persisted
 		MyStorageObject exampleObj = new MyStorageObject("Hello world!");
-		storageServiceNode.invokeLocally(storageService, new ServiceNameVersion(StorageService.class.getCanonicalName(),"1.0"),
-				"persistObject", new Serializable[] { identifier, exampleObj });
+		storageServiceNode.invoke(storageService,
+				new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "persistObject",
+				new Serializable[] { identifier, exampleObj });
 		// retrieve test object again from network
-		MyStorageObject result = (MyStorageObject) storageServiceNode.invokeLocally(storageService,
-				new ServiceNameVersion(StorageService.class.getCanonicalName(),"1.0"), "fetchObject", new Serializable[] { identifier });
+		MyStorageObject result = (MyStorageObject) storageServiceNode.invoke(storageService,
+				new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "fetchObject",
+				new Serializable[] { identifier });
 		System.out.println("Success! Received test object with message: " + result.getMsg());
 		assertEquals(exampleObj.getMsg(), result.getMsg());
 	}
