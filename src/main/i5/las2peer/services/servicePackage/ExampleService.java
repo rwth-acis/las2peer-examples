@@ -1,5 +1,18 @@
 package i5.las2peer.services.servicePackage;
 
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
 import i5.las2peer.logging.L2pLogger;
 import i5.las2peer.logging.NodeObserver.Event;
 import i5.las2peer.restMapper.HttpResponse;
@@ -17,20 +30,6 @@ import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
-
-import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
@@ -104,9 +103,10 @@ public class ExampleService extends RESTService {
 	@ApiResponses(
 			value = { @ApiResponse(
 					code = HttpURLConnection.HTTP_OK,
-					message = "Validation Confirmation"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized") })
+					message = "Validation Confirmation"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_UNAUTHORIZED,
+							message = "Unauthorized") })
 	public HttpResponse validateLogin() {
 		UserAgent userAgent = (UserAgent) getContext().getMainAgent();
 		// take username as default name
@@ -147,9 +147,10 @@ public class ExampleService extends RESTService {
 	@ApiResponses(
 			value = { @ApiResponse(
 					code = HttpURLConnection.HTTP_OK,
-					message = "Input Phrase"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized") })
+					message = "Input Phrase"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_UNAUTHORIZED,
+							message = "Unauthorized") })
 	@ApiOperation(
 			value = "Sample Resource",
 			notes = "Example method that returns a phrase containing the received input.")
@@ -176,13 +177,16 @@ public class ExampleService extends RESTService {
 	@ApiResponses(
 			value = { @ApiResponse(
 					code = HttpURLConnection.HTTP_OK,
-					message = "User Email"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized"), @ApiResponse(
-					code = HttpURLConnection.HTTP_NOT_FOUND,
-					message = "User not found"), @ApiResponse(
-					code = HttpURLConnection.HTTP_INTERNAL_ERROR,
-					message = "Internal Server Error") })
+					message = "User Email"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_UNAUTHORIZED,
+							message = "Unauthorized"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_NOT_FOUND,
+							message = "User not found"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+							message = "Internal Server Error") })
 	@ApiOperation(
 			value = "Email Address Administration",
 			notes = "Example method that retrieves a user email address from a database."
@@ -283,11 +287,13 @@ public class ExampleService extends RESTService {
 	@ApiResponses(
 			value = { @ApiResponse(
 					code = HttpURLConnection.HTTP_OK,
-					message = "Update Confirmation"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized"), @ApiResponse(
-					code = HttpURLConnection.HTTP_INTERNAL_ERROR,
-					message = "Internal Server Error") })
+					message = "Update Confirmation"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_UNAUTHORIZED,
+							message = "Unauthorized"),
+					@ApiResponse(
+							code = HttpURLConnection.HTTP_INTERNAL_ERROR,
+							message = "Internal Server Error") })
 	@ApiOperation(
 			value = "setUserEmail",
 			notes = "Example method that changes a user email address in a database."

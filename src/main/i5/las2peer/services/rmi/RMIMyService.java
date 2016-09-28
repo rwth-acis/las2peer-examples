@@ -1,11 +1,11 @@
 package i5.las2peer.services.rmi;
 
+import java.io.Serializable;
+
 import i5.las2peer.api.Service;
 import i5.las2peer.logging.L2pLogger;
 import i5.las2peer.logging.NodeObserver.Event;
 import i5.las2peer.services.rmiForeign.RMIForeignService;
-
-import java.io.Serializable;
 
 /**
  * This is the developer defined service used for the RMI call example. It represents your own LAS2peer service that
