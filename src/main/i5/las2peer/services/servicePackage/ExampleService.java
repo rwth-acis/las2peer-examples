@@ -18,7 +18,6 @@ import i5.las2peer.logging.NodeObserver.Event;
 import i5.las2peer.restMapper.HttpResponse;
 import i5.las2peer.restMapper.MediaType;
 import i5.las2peer.restMapper.RESTService;
-import i5.las2peer.restMapper.annotations.Version;
 import i5.las2peer.security.UserAgent;
 import i5.las2peer.services.servicePackage.database.DatabaseManager;
 import i5.las2peer.services.storage.StorageService;
@@ -44,8 +43,6 @@ import net.minidev.json.JSONValue;
  * 
  */
 @Path("/example")
-@Version("0.1")
-// this annotation is used by the XML mapper
 @Api
 @SwaggerDefinition(
 		info = @Info(
