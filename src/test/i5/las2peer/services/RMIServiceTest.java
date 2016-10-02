@@ -18,7 +18,7 @@ import i5.las2peer.services.rmiForeign.RMIForeignService;
 import i5.las2peer.testing.TestSuite;
 import i5.las2peer.tools.ColoredOutput;
 
-public class RMITest {
+public class RMIServiceTest {
 
 	private static PastryNodeImpl foreignServiceNode;
 	private static PastryNodeImpl myServiceNode;

@@ -197,6 +197,14 @@ pause
             	<attribute name="Import-Library" value="${service.3.dependencies}" />
             </manifest>
         </jar>
+    	<jar jarfile="${export.jars}/${service.4.name}-${service.4.version}.jar">
+            <fileset dir="${tmp.classes}" includes="${service.4.path}/**" />
+            <manifest>
+                <attribute name="Library-Version" value="${service.4.version}" />
+                <attribute name="Library-SymbolicName" value="${service.4.name}" />
+            	<attribute name="Import-Library" value="${service.4.dependencies}" />
+            </manifest>
+        </jar>
     	
     	<copy todir="${service}">
     	    <fileset dir="${export.jars}"/>

@@ -1,17 +1,12 @@
 package i5.las2peer.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import i5.las2peer.p2p.LocalNode;
 import i5.las2peer.p2p.ServiceNameVersion;
 import i5.las2peer.security.ServiceAgent;
 import i5.las2peer.security.UserAgent;
-import i5.las2peer.services.servicePackage.ExampleService;
+import i5.las2peer.services.databaseService.DatabaseService;
 import i5.las2peer.testing.MockAgentFactory;
 import i5.las2peer.webConnector.WebConnector;
-import i5.las2peer.webConnector.client.ClientResponse;
-import i5.las2peer.webConnector.client.MiniClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +21,7 @@ import org.junit.Test;
  * Example Test Class demonstrating a basic JUnit test structure.
  *
  */
-public class ServiceTest {
+public class DatabaseServiceTest {
 
 	private static final String HTTP_ADDRESS = "http://127.0.0.1";
 	private static int HTTP_PORT = WebConnector.DEFAULT_HTTP_PORT;
@@ -40,7 +35,7 @@ public class ServiceTest {
 
 	// during testing, the specified service version does not matter
 	private static final ServiceNameVersion testExampleService = new ServiceNameVersion(
-			ExampleService.class.getCanonicalName(), "1.0");
+			DatabaseService.class.getCanonicalName(), "1.0");
 
 	private static final String mainPath = "example/";
 
@@ -112,50 +107,9 @@ public class ServiceTest {
 
 	}
 
-	/**
-	 * 
-	 * Tests the validation method.
-	 * 
-	 */
 	@Test
-	public void testValidateLogin() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+	public void asdf() {
 
-		try {
-			c.setLogin(Long.toString(testAgent.getId()), testPass);
-			ClientResponse result = c.sendRequest("GET", mainPath + "validation", "");
-			assertEquals(200, result.getHttpCode());
-			assertTrue(result.getResponse().trim().contains("adam")); // login name is part of response
-			System.out.println("Result of 'testValidateLogin': " + result.getResponse().trim());
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception: " + e);
-		}
-
-	}
-
-	/**
-	 * 
-	 * Test the example method that consumes one path parameter which we give the value "testInput" in this test.
-	 * 
-	 */
-	@Test
-	public void testExampleMethod() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-
-		try {
-			c.setLogin(Long.toString(testAgent.getId()), testPass);
-			ClientResponse result = c.sendRequest("POST", mainPath + "myResourcePath/testInput", ""); // testInput is
-																										// the pathParam
-			assertEquals(200, result.getHttpCode());
-			assertTrue(result.getResponse().trim().contains("testInput")); // "testInput" name is part of response
-			System.out.println("Result of 'testExampleMethod': " + result.getResponse().trim());
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception: " + e);
-		}
 	}
 
 }

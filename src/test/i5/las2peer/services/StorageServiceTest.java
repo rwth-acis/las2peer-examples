@@ -13,8 +13,8 @@ import org.junit.Test;
 import i5.las2peer.p2p.PastryNodeImpl;
 import i5.las2peer.p2p.ServiceNameVersion;
 import i5.las2peer.security.ServiceAgent;
-import i5.las2peer.services.storage.MyStorageObject;
-import i5.las2peer.services.storage.StorageService;
+import i5.las2peer.services.storageService.MyStorageObject;
+import i5.las2peer.services.storageService.StorageService;
 import i5.las2peer.testing.TestSuite;
 import i5.las2peer.tools.ColoredOutput;
 
@@ -22,7 +22,7 @@ import i5.las2peer.tools.ColoredOutput;
  * This class checks the functionality of the StorageService example.
  *
  */
-public class StorageTest {
+public class StorageServiceTest {
 
 	private static final String TEST_STORAGE_ID = "test-storage";
 

@@ -1,14 +1,9 @@
-package i5.las2peer.services.servicePackage;
+package i5.las2peer.services.databaseService;
 
+import i5.las2peer.execution.L2pThread;
 import i5.las2peer.logging.L2pLogger;
 import i5.las2peer.logging.NodeObserver.Event;
-import i5.las2peer.restMapper.HttpResponse;
-import i5.las2peer.restMapper.MediaType;
-import i5.las2peer.restMapper.RESTService;
-import i5.las2peer.restMapper.annotations.Version;
-import i5.las2peer.security.UserAgent;
-import i5.las2peer.services.servicePackage.database.DatabaseManager;
-import i5.las2peer.services.storage.StorageService;
+import i5.las2peer.services.databaseService.database.DatabaseManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -18,7 +13,6 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,29 +24,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
-/**
- * las2peer Service
- * 
- * This is a example for a very basic las2peer service that uses the las2peer Web-Connector for RESTful access to it.
- * 
- * Note: If you plan on using Swagger you should adapt the information below in the ApiInfo annotation to suit your
- * project. If you do not intend to provide a Swagger documentation of your service API, the entire ApiInfo annotation
- * should be removed.
- * 
- */
-@Path("/example")
-@Version("0.1")
-// this annotation is used by the XML mapper
 @Api
 @SwaggerDefinition(
 		info = @Info(
 				title = "las2peer Example Service",
 				version = "0.1",
-				description = "A LAS2peer Example Service for demonstration purposes.",
+				description = "A las2peer Example Service for demonstration purposes.",
 				termsOfService = "http://your-terms-of-service-url.com",
 				contact = @Contact(
 						name = "John Doe",
@@ -61,104 +43,11 @@ import net.minidev.json.JSONValue;
 				license = @License(
 						name = "your software license name",
 						url = "http://your-software-license-url.com")))
-public class ExampleService extends RESTService {
+@Path("/")
+public class DatabaseResource {
 
 	// instantiate the logger class
-	private final L2pLogger logger = L2pLogger.getInstance(StorageService.class.getName());
-
-	/*
-	 * Database configuration
-	 */
-	private String jdbcDriverClassName;
-	private String jdbcLogin;
-	private String jdbcPass;
-	private String jdbcUrl;
-	private String jdbcSchema;
-	private DatabaseManager dbm;
-
-	public ExampleService() {
-		// read and set properties values
-		// IF THE SERVICE CLASS NAME IS CHANGED, THE PROPERTIES FILE NAME NEED TO BE CHANGED TOO!
-		setFieldValues();
-		// instantiate a database manager to handle database connection pooling and credentials
-		dbm = new DatabaseManager(jdbcDriverClassName, jdbcLogin, jdbcPass, jdbcUrl, jdbcSchema);
-	}
-
-	// //////////////////////////////////////////////////////////////////////////////////////
-	// Service methods.
-	// //////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Simple function to validate a user login. Basically it only serves as a "calling point" and does not really
-	 * validate a user (since this is done previously by LAS2peer itself, the user does not reach this method if he or
-	 * she is not authenticated).
-	 * 
-	 * @return Returns an HTTPresponse with status code and message.
-	 */
-	@GET
-	@Path("/validation")
-	@Produces(MediaType.TEXT_PLAIN)
-	@ApiOperation(
-			value = "User Validation",
-			notes = "Simple function to validate a user login.")
-	@ApiResponses(
-			value = { @ApiResponse(
-					code = HttpURLConnection.HTTP_OK,
-					message = "Validation Confirmation"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized") })
-	public HttpResponse validateLogin() {
-		UserAgent userAgent = (UserAgent) getContext().getMainAgent();
-		// take username as default name
-		String name = userAgent.getLoginName();
-		// try to fetch firstname/lastname from userdata received from OpenID
-		Serializable userData = userAgent.getUserData();
-		if (userData != null) {
-			Object jsonUserData = JSONValue.parse(userData.toString());
-			if (jsonUserData instanceof JSONObject) {
-				JSONObject obj = (JSONObject) jsonUserData;
-				Object firstname = obj.get("given_name");
-				Object lastname = obj.get("family_name");
-				if (firstname != null && lastname != null) {
-					name = ((String) firstname) + " " + ((String) lastname) + " (" + name + ")";
-				} else if (firstname != null) {
-					name = ((String) firstname) + " (" + name + ")";
-				} else if (lastname != null) {
-					name = ((String) lastname) + " (" + name + ")";
-				}
-			} else {
-				logger.warning("Parsing user data failed! Got '" + jsonUserData.getClass().getName() + "' instead of "
-						+ JSONObject.class.getName() + " expected!");
-			}
-		}
-		String returnString = "You are " + name + " and your login is valid!";
-		return new HttpResponse(returnString, HttpURLConnection.HTTP_OK);
-	}
-
-	/**
-	 * Example method that returns a phrase containing the received input.
-	 * 
-	 * @param myInput Some input string that is repeated in the answer.
-	 * @return Returns an HTTPresponse with status code and message.
-	 */
-	@POST
-	@Path("/myResourcePath/{input}")
-	@Produces(MediaType.TEXT_PLAIN)
-	@ApiResponses(
-			value = { @ApiResponse(
-					code = HttpURLConnection.HTTP_OK,
-					message = "Input Phrase"), @ApiResponse(
-					code = HttpURLConnection.HTTP_UNAUTHORIZED,
-					message = "Unauthorized") })
-	@ApiOperation(
-			value = "Sample Resource",
-			notes = "Example method that returns a phrase containing the received input.")
-	public HttpResponse exampleMethod(@PathParam("input") String myInput) {
-		String returnString = "";
-		returnString += "You have entered " + myInput + "!";
-
-		return new HttpResponse(returnString, HttpURLConnection.HTTP_OK);
-	}
+	private final L2pLogger logger = L2pLogger.getInstance(DatabaseService.class.getName());
 
 	/**
 	 * Example method that shows how to retrieve a user email address from a database and return an HTTP response
@@ -188,7 +77,9 @@ public class ExampleService extends RESTService {
 			notes = "Example method that retrieves a user email address from a database."
 					+ " WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! "
 					+ "IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.")
-	public HttpResponse getUserEmail(@PathParam("username") String username) {
+	public Response getUserEmail(@PathParam("username") String username) {
+		DatabaseManager dbm = ((DatabaseService) L2pThread.getCurrent().getServiceAgent().getServiceInstance())
+				.getDatabaseManager();
 		String result = "";
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -213,16 +104,16 @@ public class ExampleService extends RESTService {
 				ro.put("email", result);
 
 				// return HTTP Response on success
-				return new HttpResponse(ro.toJSONString(), HttpURLConnection.HTTP_OK);
+				return Response.ok().entity(ro.toJSONString()).build();
 			} else {
 				result = "No result for username " + username;
 
 				// return HTTP Response on error
-				return new HttpResponse(result, HttpURLConnection.HTTP_NOT_FOUND);
+				return Response.status(404).entity(result).build();
 			}
 		} catch (Exception e) {
 			// return HTTP Response on error
-			return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+			return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 		} finally {
 			// free resources
 			if (rs != null) {
@@ -235,7 +126,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 			if (stmnt != null) {
@@ -248,7 +139,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 			if (conn != null) {
@@ -261,7 +152,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 		}
@@ -293,8 +184,9 @@ public class ExampleService extends RESTService {
 			notes = "Example method that changes a user email address in a database."
 					+ " WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! "
 					+ "IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.")
-	public HttpResponse setUserEmail(@PathParam("username") String username, @PathParam("email") String email) {
-
+	public Response setUserEmail(@PathParam("username") String username, @PathParam("email") String email) {
+		DatabaseManager dbm = ((DatabaseService) L2pThread.getCurrent().getServiceAgent().getServiceInstance())
+				.getDatabaseManager();
 		String result = "";
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -308,10 +200,10 @@ public class ExampleService extends RESTService {
 			result = "Database updated. " + rows + " rows affected";
 
 			// return
-			return new HttpResponse(result, HttpURLConnection.HTTP_OK);
+			return Response.ok().entity(result).build();
 		} catch (Exception e) {
 			// return HTTP Response on error
-			return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+			return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 		} finally {
 			// free resources if exception or not
 			if (rs != null) {
@@ -324,7 +216,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 			if (stmnt != null) {
@@ -337,7 +229,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 			if (conn != null) {
@@ -350,7 +242,7 @@ public class ExampleService extends RESTService {
 					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
-					return new HttpResponse("Internal error: " + e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
 				}
 			}
 		}
