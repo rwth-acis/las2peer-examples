@@ -1,6 +1,7 @@
 package i5.las2peer.services.restService.resource;
 
 import i5.las2peer.services.restService.data.Actor;
+import io.swagger.annotations.ApiOperation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,11 @@ public class ActorResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(
+			value = "Actor List",
+			notes = "Get all actors of the given video.",
+			response = Actor.class,
+			responseContainer = "List")
 	public List<Actor> getActorList() {
 		List<Actor> result = new ArrayList<>();
 		// fetch actors by video id ...
@@ -36,6 +42,10 @@ public class ActorResource {
 	@GET
 	@Path("/{actorName}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(
+			value = "Actor",
+			notes = "Get details of an actor.",
+			response = Actor.class)
 	public Actor getActor(@PathParam("actorName") String actorName) {
 		// simply return the actor name ...
 		return new Actor(actorName);

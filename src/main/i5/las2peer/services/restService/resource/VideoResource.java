@@ -3,6 +3,7 @@ package i5.las2peer.services.restService.resource;
 import i5.las2peer.services.restService.data.Video;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Contact;
@@ -25,13 +26,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-// TODO swagger
-
 /**
  * This is a best effort resource showing how to deserialize and serialize content, structure a ŕesources and how to
  * document the API with Swagger.
  *
  */
+//only classes annotated with @Api are scanned by Swagger:
 @Api
 @SwaggerDefinition(
 		info = @Info(
@@ -57,8 +57,9 @@ public class VideoResource {
 					code = HttpURLConnection.HTTP_NOT_FOUND,
 					message = "Video not found.") })
 	@ApiOperation(
-			value = "Sample Resource",
-			notes = "Example method that returns a phrase containing the received input.")
+			value = "Video",
+			notes = "Returns title, description and an URI of the video.",
+			response = Video.class)
 	public Response getVideo(@PathParam("id") int id) {
 		Video video = null;
 		if (id == 1) {
@@ -77,8 +78,13 @@ public class VideoResource {
 	}
 
 	@POST
+	@ApiOperation(
+			value = "Create Video",
+			notes = "Createsa new video")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createVideo(Video video, @javax.ws.rs.core.Context UriInfo uriInfo) throws URISyntaxException {
+	public Response createVideo(@ApiParam(
+			value = "The video object.",
+			required = true) Video video, @javax.ws.rs.core.Context UriInfo uriInfo) throws URISyntaxException {
 		System.out.println("Stored video " + video.title);
 
 		int id = 3;
