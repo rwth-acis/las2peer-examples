@@ -1,8 +1,8 @@
 package i5.las2peer.services.restService;
 
+import i5.las2peer.api.Context;
 import i5.las2peer.restMapper.RESTService;
 import i5.las2peer.restMapper.annotations.ServicePath;
-import i5.las2peer.security.Context;
 import i5.las2peer.security.UserAgent;
 import i5.las2peer.services.restService.resource.VideoResource;
 
