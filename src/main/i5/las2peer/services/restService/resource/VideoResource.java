@@ -82,13 +82,14 @@ public class VideoResource {
 			value = "Create Video",
 			notes = "Createsa new video")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response createVideo(@ApiParam(
 			value = "The video object.",
 			required = true) Video video, @javax.ws.rs.core.Context UriInfo uriInfo) throws URISyntaxException {
 		System.out.println("Stored video " + video.title);
 
 		int id = 3;
-		URI createdUri = uriInfo.resolve(new URI("/video/" + id));
+		URI createdUri = uriInfo.resolve(new URI("video/" + id));
 
 		return Response.status(Status.CREATED).entity(createdUri.toString()).build();
 	}

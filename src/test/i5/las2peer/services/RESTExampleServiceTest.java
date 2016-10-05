@@ -161,7 +161,7 @@ public class RESTExampleServiceTest {
 		ClientResponse result = c.sendRequest("POST", mainPath + "video", data, "application/json", "*/*",
 				new HashMap<>());
 		assertEquals(201, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains("/video/3"));
+		assertTrue(result.getResponse().trim().contains(mainPath + "video/3"));
 	}
 
 	// ActorResource
