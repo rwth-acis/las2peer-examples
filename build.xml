@@ -181,7 +181,7 @@ pause
             	<attribute name="Import-Library" value="${service.1.dependencies}" />
             </manifest>
         </jar>
-        <jar jarfile="${export.jars}/${service.1.name}-${service.2.version}.jar">
+        <jar jarfile="${export.jars}/${service.2.name}-${service.2.version}.jar">
             <fileset dir="${tmp.classes}" includes="${service.2.path}/**" />
             <manifest>
                 <attribute name="Library-Version" value="${service.2.version}" />
@@ -300,7 +300,8 @@ agent-user-${las2peer_user3.name}.xml;${las2peer_user3.password}
         <delete dir="${tmp}" />
         <delete dir="${export}" />
         <delete dir="${lib}" />
-        <delete dir="${service}" />
+        <delete dir="${startup}" />
+    	<delete dir="${service}" />
     </target>
     
     <target name="clean_all" depends="clean" description="--> clean all data">
