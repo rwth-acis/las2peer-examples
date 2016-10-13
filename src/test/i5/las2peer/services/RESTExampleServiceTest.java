@@ -42,7 +42,7 @@ public class RESTExampleServiceTest {
 	private static final ServiceNameVersion testExampleService = new ServiceNameVersion(
 			RESTExampleService.class.getCanonicalName(), "1.0");
 
-	private static final String mainPath = "example/";
+	private static final String mainPath = "video/";
 
 	private static int getFreePort() {
 		int port = HTTP_PORT;
@@ -120,7 +120,7 @@ public class RESTExampleServiceTest {
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
 		c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "login", "");
+		ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
 		assertEquals(200, result.getHttpCode());
 		assertTrue(result.getResponse().trim().contains("adam")); // login name is part of response
 	}
@@ -145,7 +145,7 @@ public class RESTExampleServiceTest {
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
 		c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "video/1", "");
+		ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
 		assertEquals(200, result.getHttpCode());
 		assertTrue(result.getResponse().trim().contains("Gewitter"));
 	}
@@ -158,10 +158,9 @@ public class RESTExampleServiceTest {
 
 		String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
 
-		ClientResponse result = c.sendRequest("POST", mainPath + "video", data, "application/json", "*/*",
-				new HashMap<>());
+		ClientResponse result = c.sendRequest("POST", mainPath, data, "application/json", "*/*", new HashMap<>());
 		assertEquals(201, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains(mainPath + "video/3"));
+		assertTrue(result.getResponse().trim().contains(mainPath + "3"));
 	}
 
 	// ActorResource
@@ -172,7 +171,7 @@ public class RESTExampleServiceTest {
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
 		c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "video/1/actor", "");
+		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
 		assertEquals(200, result.getHttpCode());
 		assertTrue(result.getResponse().trim().contains("Florentin"));
 	}
@@ -183,7 +182,7 @@ public class RESTExampleServiceTest {
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
 		c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "video/1/actor/eljasper", "");
+		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
 		assertEquals(200, result.getHttpCode());
 		assertTrue(result.getResponse().trim().contains("eljasper"));
 	}
