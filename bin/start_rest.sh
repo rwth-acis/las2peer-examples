@@ -1,0 +1,1 @@
+java -cp "lib/*" i5.las2peer.tools.L2pNodeLauncher -p 9011 uploadStartupDirectory\(\'etc/startup\'\) startService\(\'i5.las2peer.services.restService.RESTExampleService@1.0\'\) startWebConnector interactive
