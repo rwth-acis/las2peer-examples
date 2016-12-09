@@ -129,6 +129,9 @@ public class RESTExampleService extends RESTService {
 
 		/**
 		 * Passes the request to a subresource.
+		 * 
+		 * @param id An id to identify the resource.
+		 * @return Returns the requested resource identified by the given id.
 		 */
 		@Path("/{id}/actor")
 		public ActorResource getActorResource(@PathParam("id") int id) {
@@ -139,6 +142,8 @@ public class RESTExampleService extends RESTService {
 
 		/**
 		 * Shows how to use the las2peer Context to get the user name.
+		 * 
+		 * @return Returns the username for the currently active agent.
 		 */
 		@GET
 		@Path("/username")
@@ -152,6 +157,9 @@ public class RESTExampleService extends RESTService {
 
 		/**
 		 * Shows how to get the raw post body.
+		 * 
+		 * @param content A value that is echoed back in the response.
+		 * @return Returns the given content string as response.
 		 */
 		@POST
 		@Path("/echo")
