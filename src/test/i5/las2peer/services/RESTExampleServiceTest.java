@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -60,132 +61,165 @@ public class RESTExampleServiceTest {
 	 * Called before the tests start.
 	 * 
 	 * Sets up the node and initializes connector and users that can be used throughout the tests.
-	 * 
-	 * @throws Exception
 	 */
 	@BeforeClass
-	public static void startServer() throws Exception {
-		HTTP_PORT = getFreePort();
+	public static void startServer() {
+		try {
+			HTTP_PORT = getFreePort();
 
-		// start node
-		node = LocalNode.newNode();
-		testAgent = MockAgentFactory.getAdam();
-		testAgent.unlockPrivateKey(testPass); // agent must be unlocked in order to be stored
-		node.storeAgent(testAgent);
-		node.launch();
+			// start node
+			node = LocalNode.newNode();
+			testAgent = MockAgentFactory.getAdam();
+			testAgent.unlockPrivateKey(testPass); // agent must be unlocked in order to be stored
+			node.storeAgent(testAgent);
+			node.launch();
 
-		ServiceAgent testService = ServiceAgent.createServiceAgent(testExampleService, "a pass");
-		testService.unlockPrivateKey("a pass");
+			ServiceAgent testService = ServiceAgent.createServiceAgent(testExampleService, "a pass");
+			testService.unlockPrivateKey("a pass");
 
-		node.registerReceiver(testService);
+			node.registerReceiver(testService);
 
-		// start connector
-		logStream = new ByteArrayOutputStream();
+			// start connector
+			logStream = new ByteArrayOutputStream();
 
-		connector = new WebConnector(true, HTTP_PORT, false, 1000);
-		connector.setLogStream(new PrintStream(logStream));
-		connector.start(node);
-		Thread.sleep(1000); // wait a second for the connector to become ready
-		testAgent = MockAgentFactory.getAdam(); // get a locked agent
-
+			connector = new WebConnector(true, HTTP_PORT, false, 1000);
+			connector.setLogStream(new PrintStream(logStream));
+			connector.start(node);
+			Thread.sleep(1000); // wait a second for the connector to become ready
+			testAgent = MockAgentFactory.getAdam(); // get a locked agent
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	/**
 	 * Called after the tests have finished. Shuts down the server and prints out the connector log file for reference.
-	 * 
-	 * @throws Exception
 	 */
 	@AfterClass
-	public static void shutDownServer() throws Exception {
+	public static void shutDownServer() {
+		try {
+			connector.stop();
+			node.shutDown();
 
-		connector.stop();
-		node.shutDown();
+			connector = null;
+			node = null;
 
-		connector = null;
-		node = null;
+			LocalNode.reset();
 
-		LocalNode.reset();
+			System.out.println("Connector-Log:");
+			System.out.println("--------------");
 
-		System.out.println("Connector-Log:");
-		System.out.println("--------------");
-
-		System.out.println(logStream.toString());
-
+			System.out.println(logStream.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	// MemberResource
 
 	@Test
 	public void testGetUserName() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
-		assertEquals(200, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains("adam")); // login name is part of response
+			ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
+			assertEquals(200, result.getHttpCode());
+			assertTrue(result.getResponse().trim().contains("adam")); // login name is part of response
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	@Test
 	public void testEcho() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		String content = "myContent";
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			String content = "myContent";
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("POST", mainPath + "echo", content);
-		assertEquals(200, result.getHttpCode());
-		assertTrue(result.getResponse().trim().equals(content));
+			ClientResponse result = c.sendRequest("POST", mainPath + "echo", content);
+			assertEquals(200, result.getHttpCode());
+			assertTrue(result.getResponse().trim().equals(content));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	// VideoResource
 
 	@Test
 	public void testGetVideo() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
-		assertEquals(200, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains("Gewitter"));
+			ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
+			assertEquals(200, result.getHttpCode());
+			assertTrue(result.getResponse().trim().contains("Gewitter"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	@Test
 	public void testCreateVideo() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
+			String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
 
-		ClientResponse result = c.sendRequest("POST", mainPath, data, "application/json", "*/*", new HashMap<>());
-		assertEquals(201, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains(mainPath + "3"));
+			ClientResponse result = c.sendRequest("POST", mainPath, data, "application/json", "*/*", new HashMap<>());
+			assertEquals(201, result.getHttpCode());
+			assertTrue(result.getResponse().trim().contains(mainPath + "3"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	// ActorResource
 
 	@Test
 	public void testGetActorList() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
-		assertEquals(200, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains("Florentin"));
+			ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
+			assertEquals(200, result.getHttpCode());
+			assertTrue(result.getResponse().trim().contains("Florentin"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	@Test
 	public void testGetActor() {
-		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		try {
+			MiniClient c = new MiniClient();
+			c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+			c.setLogin(Long.toString(testAgent.getId()), testPass);
 
-		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
-		assertEquals(200, result.getHttpCode());
-		assertTrue(result.getResponse().trim().contains("eljasper"));
+			ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
+			assertEquals(200, result.getHttpCode());
+			assertTrue(result.getResponse().trim().contains("eljasper"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 }

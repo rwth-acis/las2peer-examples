@@ -49,15 +49,20 @@ public class RMIServiceTest {
 			myServiceNode.registerReceiver(myServiceAgent);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Assert.fail();
+			Assert.fail(e.toString());
 		}
 	}
 
 	@AfterClass
 	public static void stopNetwork() {
-		System.out.println("stopping test network...");
-		foreignServiceNode.shutDown();
-		myServiceNode.shutDown();
+		try {
+			System.out.println("stopping test network...");
+			foreignServiceNode.shutDown();
+			myServiceNode.shutDown();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	@Test
@@ -70,6 +75,7 @@ public class RMIServiceTest {
 			assertEquals(result, RMIForeignService.TEST_STRING);
 		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail(e.toString());
 		}
 	}
 
@@ -83,6 +89,7 @@ public class RMIServiceTest {
 			assertEquals(result, RMIMyService.TEST_RESULT);
 		} catch (Exception e) {
 			e.printStackTrace();
+			Assert.fail(e.toString());
 		}
 	}
 

@@ -43,31 +43,41 @@ public class StorageServiceTest {
 			storageServiceNode.registerReceiver(storageService);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Assert.fail();
+			Assert.fail(e.toString());
 		}
 	}
 
 	@AfterClass
 	public static void stopNetwork() {
-		System.out.println("stopping test network...");
-		storageServiceNode.shutDown();
+		try {
+			System.out.println("stopping test network...");
+			storageServiceNode.shutDown();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	@Test
-	public void testStorage() throws Exception {
-		// generate an unique identifier, use a better/safer algorithm for your own service!
-		String identifier = TEST_STORAGE_ID + new Random().nextInt();
-		// this is the test object that will be persisted
-		MyStorageObject exampleObj = new MyStorageObject("Hello world!");
-		storageServiceNode.invoke(storageService,
-				new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "persistObject",
-				new Serializable[] { identifier, exampleObj });
-		// retrieve test object again from network
-		MyStorageObject result = (MyStorageObject) storageServiceNode.invoke(storageService,
-				new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "fetchObject",
-				new Serializable[] { identifier });
-		System.out.println("Success! Received test object with message: " + result.getMsg());
-		assertEquals(exampleObj.getMsg(), result.getMsg());
+	public void testStorage() {
+		try {
+			// generate an unique identifier, use a better/safer algorithm for your own service!
+			String identifier = TEST_STORAGE_ID + new Random().nextInt();
+			// this is the test object that will be persisted
+			MyStorageObject exampleObj = new MyStorageObject("Hello world!");
+			storageServiceNode.invoke(storageService,
+					new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "persistObject",
+					new Serializable[] { identifier, exampleObj });
+			// retrieve test object again from network
+			MyStorageObject result = (MyStorageObject) storageServiceNode.invoke(storageService,
+					new ServiceNameVersion(StorageService.class.getCanonicalName(), "1.0"), "fetchObject",
+					new Serializable[] { identifier });
+			System.out.println("Success! Received test object with message: " + result.getMsg());
+			assertEquals(exampleObj.getMsg(), result.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 }
