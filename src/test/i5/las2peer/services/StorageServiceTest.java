@@ -10,9 +10,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import i5.las2peer.api.p2p.ServiceNameVersion;
 import i5.las2peer.p2p.PastryNodeImpl;
-import i5.las2peer.p2p.ServiceNameVersion;
-import i5.las2peer.security.ServiceAgent;
+import i5.las2peer.security.ServiceAgentImpl;
 import i5.las2peer.services.storageService.MyStorageObject;
 import i5.las2peer.services.storageService.StorageService;
 import i5.las2peer.testing.TestSuite;
@@ -27,7 +27,7 @@ public class StorageServiceTest {
 	private static final String TEST_STORAGE_ID = "test-storage";
 
 	private static PastryNodeImpl storageServiceNode;
-	private static ServiceAgent storageService;
+	private static ServiceAgentImpl storageService;
 
 	@BeforeClass
 	public static void init() {
@@ -37,9 +37,9 @@ public class StorageServiceTest {
 			// start storage service node as standalone network
 			storageServiceNode = TestSuite.launchNetwork(1).get(0);
 			// start storage service
-			storageService = ServiceAgent.createServiceAgent(
+			storageService = ServiceAgentImpl.createServiceAgent(
 					new ServiceNameVersion(StorageService.class.getName(), "1.0"), "test-service-pass");
-			storageService.unlockPrivateKey("test-service-pass");
+			storageService.unlock("test-service-pass");
 			storageServiceNode.registerReceiver(storageService);
 		} catch (Exception e) {
 			e.printStackTrace();

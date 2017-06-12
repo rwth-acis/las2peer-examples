@@ -10,9 +10,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import i5.las2peer.api.p2p.ServiceNameVersion;
 import i5.las2peer.p2p.PastryNodeImpl;
-import i5.las2peer.p2p.ServiceNameVersion;
-import i5.las2peer.security.ServiceAgent;
+import i5.las2peer.security.ServiceAgentImpl;
 import i5.las2peer.services.rmi.RMIMyService;
 import i5.las2peer.services.rmiForeign.RMIForeignService;
 import i5.las2peer.testing.TestSuite;
@@ -22,8 +22,8 @@ public class RMIServiceTest {
 
 	private static PastryNodeImpl foreignServiceNode;
 	private static PastryNodeImpl myServiceNode;
-	private static ServiceAgent foreignServiceAgent;
-	private static ServiceAgent myServiceAgent;
+	private static ServiceAgentImpl foreignServiceAgent;
+	private static ServiceAgentImpl myServiceAgent;
 
 	@BeforeClass
 	public static void init() {
@@ -34,17 +34,17 @@ public class RMIServiceTest {
 			// start foreign service node as standalone network
 			foreignServiceNode = nodes.get(0);
 			// start foreign service
-			foreignServiceAgent = ServiceAgent.createServiceAgent(
+			foreignServiceAgent = ServiceAgentImpl.createServiceAgent(
 					new ServiceNameVersion(RMIForeignService.class.getName(), "1.0"), "test-service-pass");
-			foreignServiceAgent.unlockPrivateKey("test-service-pass");
+			foreignServiceAgent.unlock("test-service-pass");
 			foreignServiceNode.storeAgent(foreignServiceAgent);
 			foreignServiceNode.registerReceiver(foreignServiceAgent);
 			// start developer defined service that uses the foreign service for RMI calls
 			myServiceNode = nodes.get(1);
 			// start developer defined service
-			myServiceAgent = ServiceAgent.createServiceAgent(
+			myServiceAgent = ServiceAgentImpl.createServiceAgent(
 					new ServiceNameVersion(RMIMyService.class.getName(), "1.0"), "test-service-pass");
-			myServiceAgent.unlockPrivateKey("test-service-pass");
+			myServiceAgent.unlock("test-service-pass");
 			myServiceNode.storeAgent(myServiceAgent);
 			myServiceNode.registerReceiver(myServiceAgent);
 		} catch (Exception e) {

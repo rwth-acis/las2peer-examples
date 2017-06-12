@@ -16,9 +16,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import i5.las2peer.api.Context;
+import i5.las2peer.api.security.UserAgent;
 import i5.las2peer.restMapper.RESTService;
 import i5.las2peer.restMapper.annotations.ServicePath;
-import i5.las2peer.security.UserAgent;
 import i5.las2peer.services.restService.data.Video;
 import i5.las2peer.services.restService.resource.ActorResource;
 import io.swagger.annotations.Api;
@@ -79,7 +79,7 @@ public class RESTExampleService extends RESTService {
 		/**
 		 * A reference to the current service.
 		 */
-		private final RESTExampleService service = (RESTExampleService) Context.getCurrent().getService();
+		private final RESTExampleService service = Context.getCurrent().getService(RESTExampleService.class);
 
 		@GET
 		@Path("/{id}")

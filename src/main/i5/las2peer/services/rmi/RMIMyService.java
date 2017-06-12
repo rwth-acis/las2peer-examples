@@ -2,9 +2,9 @@ package i5.las2peer.services.rmi;
 
 import java.io.Serializable;
 
+import i5.las2peer.api.Context;
 import i5.las2peer.api.Service;
-import i5.las2peer.logging.L2pLogger;
-import i5.las2peer.logging.NodeObserver.Event;
+import i5.las2peer.api.logging.MonitoringEvent;
 import i5.las2peer.services.rmiForeign.RMIForeignService;
 
 /**
@@ -28,14 +28,14 @@ public class RMIMyService extends Service {
 		try {
 			// RMI call without parameters
 			// !!! Remember to set the first parameter to the canonical name of the invoked service class:
-			Object result = this.invokeServiceMethod(RMIForeignService.class.getCanonicalName(), "serviceMethodOne",
+			Object result = Context.get().invoke(RMIForeignService.class.getCanonicalName(), "serviceMethodOne",
 					new Serializable[] {});
 			if (result != null) {
 				return (String) result;
 			}
 		} catch (Exception e) {
 			// one may want to handle some exceptions differently
-			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+			Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 		}
 		return null;
 	}
@@ -48,14 +48,14 @@ public class RMIMyService extends Service {
 	public Integer callRMITwo() {
 		try {
 			// RMI call with parameters
-			Object result = this.invokeServiceMethod(RMIForeignService.class.getCanonicalName(), "serviceMethodTwo",
+			Object result = Context.get().invoke(RMIForeignService.class.getCanonicalName(), "serviceMethodTwo",
 					new Serializable[] { VAL1, VAL2 });
 			if (result != null) {
 				return (int) result;
 			}
 		} catch (Exception e) {
 			// one may want to handle some exceptions differently
-			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+			Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 		}
 		return null;
 	}

@@ -2,15 +2,15 @@ package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import i5.las2peer.api.p2p.ServiceNameVersion;
+import i5.las2peer.connectors.webConnector.WebConnector;
+import i5.las2peer.connectors.webConnector.client.ClientResponse;
+import i5.las2peer.connectors.webConnector.client.MiniClient;
 import i5.las2peer.p2p.LocalNode;
-import i5.las2peer.p2p.ServiceNameVersion;
-import i5.las2peer.security.ServiceAgent;
-import i5.las2peer.security.UserAgent;
+import i5.las2peer.security.ServiceAgentImpl;
+import i5.las2peer.security.UserAgentImpl;
 import i5.las2peer.services.restService.RESTExampleService;
 import i5.las2peer.testing.MockAgentFactory;
-import i5.las2peer.webConnector.WebConnector;
-import i5.las2peer.webConnector.client.ClientResponse;
-import i5.las2peer.webConnector.client.MiniClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class RESTExampleServiceTest {
 	private static WebConnector connector;
 	private static ByteArrayOutputStream logStream;
 
-	private static UserAgent testAgent;
+	private static UserAgentImpl testAgent;
 	private static final String testPass = "adamspass";
 
 	// during testing, the specified service version does not matter
@@ -69,12 +69,12 @@ public class RESTExampleServiceTest {
 		// start node
 		node = LocalNode.newNode();
 		testAgent = MockAgentFactory.getAdam();
-		testAgent.unlockPrivateKey(testPass); // agent must be unlocked in order to be stored
+		testAgent.unlock(testPass); // agent must be unlocked in order to be stored
 		node.storeAgent(testAgent);
 		node.launch();
 
-		ServiceAgent testService = ServiceAgent.createServiceAgent(testExampleService, "a pass");
-		testService.unlockPrivateKey("a pass");
+		ServiceAgentImpl testService = ServiceAgentImpl.createServiceAgent(testExampleService, "a pass");
+		testService.unlock("a pass");
 
 		node.registerReceiver(testService);
 
@@ -118,7 +118,7 @@ public class RESTExampleServiceTest {
 	public void testGetUserName() {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
 		assertEquals(200, result.getHttpCode());
@@ -130,7 +130,7 @@ public class RESTExampleServiceTest {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
 		String content = "myContent";
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("POST", mainPath + "echo", content);
 		assertEquals(200, result.getHttpCode());
@@ -143,7 +143,7 @@ public class RESTExampleServiceTest {
 	public void testGetVideo() {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
 		assertEquals(200, result.getHttpCode());
@@ -154,7 +154,7 @@ public class RESTExampleServiceTest {
 	public void testCreateVideo() {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
 
@@ -169,7 +169,7 @@ public class RESTExampleServiceTest {
 	public void testGetActorList() {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
 		assertEquals(200, result.getHttpCode());
@@ -180,7 +180,7 @@ public class RESTExampleServiceTest {
 	public void testGetActor() {
 		MiniClient c = new MiniClient();
 		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
-		c.setLogin(Long.toString(testAgent.getId()), testPass);
+		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
 		assertEquals(200, result.getHttpCode());

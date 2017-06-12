@@ -1,12 +1,12 @@
 package i5.las2peer.services;
 
 import i5.las2peer.p2p.LocalNode;
-import i5.las2peer.p2p.ServiceNameVersion;
-import i5.las2peer.security.ServiceAgent;
-import i5.las2peer.security.UserAgent;
+import i5.las2peer.security.ServiceAgentImpl;
+import i5.las2peer.security.UserAgentImpl;
 import i5.las2peer.services.databaseService.DatabaseService;
 import i5.las2peer.testing.MockAgentFactory;
-import i5.las2peer.webConnector.WebConnector;
+import i5.las2peer.api.p2p.ServiceNameVersion;
+import i5.las2peer.connectors.webConnector.WebConnector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class DatabaseServiceTest {
 	private static WebConnector connector;
 	private static ByteArrayOutputStream logStream;
 
-	private static UserAgent testAgent;
+	private static UserAgentImpl testAgent;
 	private static final String testPass = "adamspass";
 
 	// during testing, the specified service version does not matter
@@ -64,12 +64,12 @@ public class DatabaseServiceTest {
 		// start node
 		node = LocalNode.newNode();
 		testAgent = MockAgentFactory.getAdam();
-		testAgent.unlockPrivateKey(testPass); // agent must be unlocked in order to be stored
+		testAgent.unlock(testPass); // agent must be unlocked in order to be stored
 		node.storeAgent(testAgent);
 		node.launch();
 
-		ServiceAgent testService = ServiceAgent.createServiceAgent(testExampleService, "a pass");
-		testService.unlockPrivateKey("a pass");
+		ServiceAgentImpl testService = ServiceAgentImpl.createServiceAgent(testExampleService, "a pass");
+		testService.unlock("a pass");
 
 		node.registerReceiver(testService);
 
