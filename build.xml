@@ -69,7 +69,7 @@
             <credentials host="role.dbis.rwth-aachen.de:9911/archiva"  realm="Repository internal"/>
         </ivy:settings>
     	<ivy:retrieve type="jar, bundle" conf="platform" pattern="${lib}/[artifact]-[revision].[ext]"/>
-    	<ivy:retrieve type="jar, bundle" conf="bundle" pattern="${service}/[artifact]-[revision].[ext]"/>
+    	<ivy:retrieve type="jar, bundle" conf="bundle" pattern="service0bundle/[artifact]-[revision].[ext]"/>
     </target>
     
     
@@ -77,6 +77,7 @@
 	<target name="init_deps">
         <mkdir dir="${lib}" />
         <mkdir dir="${service}" />
+		<mkdir dir="service0bundle" />
     </target>
 	
     <target name="init_general">
@@ -166,6 +167,7 @@ pause
     <!-- Generate Jars -->
     <target name="jar" depends="compile_main" description="--> jar">
         <jar jarfile="${export.jars}/${service.0.name}-${service.0.version}.jar">
+        	<zipgroupfileset dir="service0bundle" includes="**/*.jar" />
             <fileset dir="${tmp.classes}" includes="${service.0.path}/**" />
             <manifest>
                 <attribute name="Library-Version" value="${service.0.version}" />
