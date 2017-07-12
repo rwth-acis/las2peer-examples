@@ -19,6 +19,7 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -59,8 +60,6 @@ public class RESTExampleServiceTest {
 	 * Called before the tests start.
 	 * 
 	 * Sets up the node and initializes connector and users that can be used throughout the tests.
-	 * 
-	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
@@ -86,30 +85,30 @@ public class RESTExampleServiceTest {
 		connector.start(node);
 		Thread.sleep(1000); // wait a second for the connector to become ready
 		testAgent = MockAgentFactory.getAdam(); // get a locked agent
-
 	}
 
 	/**
 	 * Called after the tests have finished. Shuts down the server and prints out the connector log file for reference.
-	 * 
-	 * @throws Exception
 	 */
 	@AfterClass
-	public static void shutDownServer() throws Exception {
+	public static void shutDownServer() {
+		try {
+			connector.stop();
+			node.shutDown();
 
-		connector.stop();
-		node.shutDown();
+			connector = null;
+			node = null;
 
-		connector = null;
-		node = null;
+			LocalNode.reset();
 
-		LocalNode.reset();
+			System.out.println("Connector-Log:");
+			System.out.println("--------------");
 
-		System.out.println("Connector-Log:");
-		System.out.println("--------------");
-
-		System.out.println(logStream.toString());
-
+			System.out.println(logStream.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 
 	// MemberResource
