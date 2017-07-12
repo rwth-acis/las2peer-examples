@@ -32,7 +32,7 @@
             <include name="**/*.jar"/>
             <exclude name="junit-*.jar"/>
         </fileset>
-    	<fileset dir="${service}">
+    	<fileset dir="service0bundle">
     	    <include name="**/*.jar"/>
     	    <exclude name="i5.las2peer.services.*.jar"/>
     	</fileset>
@@ -304,6 +304,7 @@ agent-user-${las2peer_user3.name}.xml;${las2peer_user3.password}
         <delete dir="${lib}" />
         <delete dir="${startup}" />
     	<delete dir="${service}" />
+    	<delete dir="service0bundle" />
     </target>
     
     <target name="clean_all" depends="clean" description="--> clean all data">
