@@ -1,9 +1,7 @@
 package i5.las2peer.services;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -25,7 +23,6 @@ import i5.las2peer.testing.MockAgentFactory;
 public class DatabaseServiceTest {
 
 	private static final String HTTP_ADDRESS = "http://127.0.0.1";
-	private static int HTTP_PORT = WebConnector.DEFAULT_HTTP_PORT;
 
 	private static LocalNode node;
 	private static WebConnector connector;
@@ -40,17 +37,6 @@ public class DatabaseServiceTest {
 
 	private static final String mainPath = "example/";
 
-	private static int getFreePort() {
-		int port = HTTP_PORT;
-		try {
-			ServerSocket socket = new ServerSocket(0);
-			port = socket.getLocalPort();
-			socket.close();
-		} catch (IOException e) {
-		}
-		return port;
-	}
-
 	/**
 	 * Called before the tests start.
 	 * 
@@ -60,8 +46,6 @@ public class DatabaseServiceTest {
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
-		HTTP_PORT = getFreePort();
-
 		// start node
 		node = new LocalNodeManager().newNode();
 		testAgent = MockAgentFactory.getAdam();
@@ -77,7 +61,7 @@ public class DatabaseServiceTest {
 		// start connector
 		logStream = new ByteArrayOutputStream();
 
-		connector = new WebConnector(true, HTTP_PORT, false, 1000);
+		connector = new WebConnector(true, 0, false, 0); // port: 0 => use system defined port
 		connector.setLogStream(new PrintStream(logStream));
 		connector.start(node);
 		Thread.sleep(1000); // wait a second for the connector to become ready
