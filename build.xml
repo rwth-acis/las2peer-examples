@@ -32,7 +32,7 @@
             <include name="**/*.jar"/>
             <exclude name="junit-*.jar"/>
         </fileset>
-    	<fileset dir="${service}">
+    	<fileset dir="service0bundle">
     	    <include name="**/*.jar"/>
     	    <exclude name="i5.las2peer.services.*.jar"/>
     	</fileset>
@@ -69,7 +69,7 @@
             <credentials host="role.dbis.rwth-aachen.de:9911/archiva"  realm="Repository internal"/>
         </ivy:settings>
     	<ivy:retrieve type="jar, bundle" conf="platform" pattern="${lib}/[artifact]-[revision].[ext]"/>
-    	<ivy:retrieve type="jar, bundle" conf="bundle" pattern="${service}/[artifact]-[revision].[ext]"/>
+    	<ivy:retrieve type="jar, bundle" conf="bundle" pattern="service0bundle/[artifact]-[revision].[ext]"/>
     </target>
     
     
@@ -77,6 +77,7 @@
 	<target name="init_deps">
         <mkdir dir="${lib}" />
         <mkdir dir="${service}" />
+		<mkdir dir="service0bundle" />
     </target>
 	
     <target name="init_general">
@@ -166,6 +167,7 @@ pause
     <!-- Generate Jars -->
     <target name="jar" depends="compile_main" description="--> jar">
         <jar jarfile="${export.jars}/${service.0.name}-${service.0.version}.jar">
+        	<zipgroupfileset dir="service0bundle" includes="**/*.jar" />
             <fileset dir="${tmp.classes}" includes="${service.0.path}/**" />
             <manifest>
                 <attribute name="Library-Version" value="${service.0.version}" />
@@ -244,7 +246,7 @@ pause
     </target>
     
     <target name="junit_tests" depends="init_junit, compile_all">
-        <junit fork="yes" haltonerror="yes" haltonfailure="yes" printsummary="yes">
+        <junit haltonerror="yes" haltonfailure="yes" printsummary="yes">
             <classpath>
                 <pathelement path="${tmp.classes}" />
                 <pathelement path="${tmp.junit}" />
@@ -252,7 +254,7 @@ pause
                 <path refid="libraries"/>
             </classpath>
             <formatter type="plain" />
-            <batchtest fork="yes" todir="${junit.report}">
+            <batchtest todir="${junit.report}">
                 <fileset dir="${tmp.junit}">
                     <include name="**/*Test.class"/>
                 </fileset>
@@ -302,6 +304,7 @@ agent-user-${las2peer_user3.name}.xml;${las2peer_user3.password}
         <delete dir="${lib}" />
         <delete dir="${startup}" />
     	<delete dir="${service}" />
+    	<delete dir="service0bundle" />
     </target>
     
     <target name="clean_all" depends="clean" description="--> clean all data">

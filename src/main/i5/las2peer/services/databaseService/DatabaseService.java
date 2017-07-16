@@ -1,6 +1,9 @@
 package i5.las2peer.services.databaseService;
 
-import i5.las2peer.logging.L2pLogger;
+import java.util.logging.Level;
+
+import i5.las2peer.api.ManualDeployment;
+import i5.las2peer.api.ServiceException;
 import i5.las2peer.restMapper.RESTService;
 import i5.las2peer.restMapper.annotations.ServicePath;
 import i5.las2peer.services.databaseService.database.DatabaseManager;
@@ -13,10 +16,8 @@ import i5.las2peer.services.databaseService.database.DatabaseManager;
  * 
  */
 @ServicePath("/database")
+@ManualDeployment
 public class DatabaseService extends RESTService {
-
-	// instantiate the logger class
-	private final L2pLogger logger = L2pLogger.getInstance(DatabaseService.class.getName());
 
 	// database configuration
 	private String jdbcDriverClassName;
@@ -25,16 +26,17 @@ public class DatabaseService extends RESTService {
 	private String jdbcUrl;
 	private String jdbcSchema;
 	private DatabaseManager dbm;
-
-	public DatabaseService() {
-		super();
-
+	
+	@Override
+	public void onStart() throws ServiceException {
 		// read and set properties values
 		// IF THE SERVICE CLASS NAME IS CHANGED, THE PROPERTIES FILE NAME NEED TO BE CHANGED TOO!
 		setFieldValues();
 
 		// instantiate a database manager to handle database connection pooling and credentials
 		dbm = new DatabaseManager(jdbcDriverClassName, jdbcLogin, jdbcPass, jdbcUrl, jdbcSchema);
+		
+		getLogger().log(Level.INFO, "Service started");
 	}
 
 	@Override

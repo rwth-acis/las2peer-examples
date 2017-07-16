@@ -2,19 +2,16 @@ package i5.las2peer.services.storageService;
 
 import java.util.logging.Level;
 
+import i5.las2peer.api.Context;
 import i5.las2peer.api.Service;
-import i5.las2peer.logging.L2pLogger;
-import i5.las2peer.logging.NodeObserver.Event;
-import i5.las2peer.persistency.Envelope;
+import i5.las2peer.api.logging.MonitoringEvent;
+import i5.las2peer.api.persistency.Envelope;
 
 /**
  * This class is a LAS2peer service example. It shows how a service should store and fetch objects in network storage.
  *
  */
 public class StorageService extends Service {
-
-	// instantiate the logger class
-	private final L2pLogger logger = L2pLogger.getInstance(StorageService.class.getName());
 
 	/**
 	 * This method stores an object inside the LAS2peer network storage. The type of the object is not limited, any
@@ -28,22 +25,23 @@ public class StorageService extends Service {
 			Envelope env = null;
 			try {
 				// fetch existing container object from network storage
-				env = getContext().fetchEnvelope(identifier);
+				env = Context.get().requestEnvelope(identifier);
 				// place the new object inside container
-				env = getContext().createEnvelope(identifier, object);
+				env.setContent(object);
 			} catch (Exception e) {
 				// write info message to logfile and console
-				logger.log(Level.INFO, "Network storage container not found. Creating new one. " + e.toString());
+				Context.get().getLogger(this.getClass()).log(Level.INFO, "Network storage container not found. Creating new one. " + e.toString());
 				// create new container object with current ServiceAgent as owner
-				env = getContext().createEnvelope(identifier, object);
+				env = Context.get().createEnvelope(identifier);
+				env.setContent(object);
 			}
 			// upload the updated storage container back to the network
-			getContext().storeEnvelope(env);
+			Context.get().storeEnvelope(env);
 		} catch (Exception e) {
 			// write error to logfile and console
-			logger.log(Level.SEVERE, "Can't persist to network storage!", e);
+			Context.get().getLogger(this.getClass()).log(Level.SEVERE, "Can't persist to network storage!", e);
 			// create and publish a monitoring message
-			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+			Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 		}
 	}
 
@@ -57,15 +55,15 @@ public class StorageService extends Service {
 	public MyStorageObject fetchObject(String identifier) {
 		try {
 			// fetch existing container object from network storage
-			Envelope env = getContext().fetchEnvelope(identifier);
+			Envelope env = Context.get().requestEnvelope(identifier);
 			// deserialize content from envelope
 			MyStorageObject retrieved = (MyStorageObject) env.getContent();
 			return retrieved;
 		} catch (Exception e) {
 			// write error to logfile and console
-			logger.log(Level.SEVERE, "Can't fetch from network storage!", e);
+			Context.get().getLogger(this.getClass()).log(Level.SEVERE, "Can't fetch from network storage!", e);
 			// create and publish a monitoring message
-			L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+			Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 		}
 		return null;
 	}

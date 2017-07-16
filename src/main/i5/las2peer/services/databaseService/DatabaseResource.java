@@ -1,8 +1,7 @@
 package i5.las2peer.services.databaseService;
 
-import i5.las2peer.execution.L2pThread;
-import i5.las2peer.logging.L2pLogger;
-import i5.las2peer.logging.NodeObserver.Event;
+import i5.las2peer.api.Context;
+import i5.las2peer.api.logging.MonitoringEvent;
 import i5.las2peer.services.databaseService.database.DatabaseManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -47,7 +47,7 @@ import net.minidev.json.JSONObject;
 public class DatabaseResource {
 
 	// instantiate the logger class
-	private final L2pLogger logger = L2pLogger.getInstance(DatabaseService.class.getName());
+	private final Logger logger = Context.get().getLogger(this.getClass());
 
 	/**
 	 * Example method that shows how to retrieve a user email address from a database and return an HTTP response
@@ -78,8 +78,7 @@ public class DatabaseResource {
 					+ " WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! "
 					+ "IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.")
 	public Response getUserEmail(@PathParam("username") String username) {
-		DatabaseManager dbm = ((DatabaseService) L2pThread.getCurrent().getServiceAgent().getServiceInstance())
-				.getDatabaseManager();
+		DatabaseManager dbm = ((DatabaseService) Context.get().getService()).getDatabaseManager();
 		String result = "";
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -123,7 +122,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
@@ -136,7 +135,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
@@ -149,7 +148,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
@@ -185,8 +184,7 @@ public class DatabaseResource {
 					+ " WARNING: THIS METHOD IS ONLY FOR DEMONSTRATIONAL PURPOSES!!! "
 					+ "IT WILL REQUIRE RESPECTIVE DATABASE TABLES IN THE BACKEND, WHICH DON'T EXIST IN THE EXAMPLE.")
 	public Response setUserEmail(@PathParam("username") String username, @PathParam("email") String email) {
-		DatabaseManager dbm = ((DatabaseService) L2pThread.getCurrent().getServiceAgent().getServiceInstance())
-				.getDatabaseManager();
+		DatabaseManager dbm = ((DatabaseService) Context.get().getService()).getDatabaseManager();
 		String result = "";
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -213,7 +211,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
@@ -226,7 +224,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
@@ -239,7 +237,7 @@ public class DatabaseResource {
 					// write error to logfile and console
 					logger.log(Level.SEVERE, e.toString(), e);
 					// create and publish a monitoring message
-					L2pLogger.logEvent(this, Event.SERVICE_ERROR, e.toString());
+					Context.get().monitorEvent(this, MonitoringEvent.SERVICE_ERROR, e.toString());
 
 					// return HTTP Response on error
 					return Response.status(500).entity("Internal error: " + e.getMessage()).build();
