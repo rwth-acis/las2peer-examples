@@ -1,13 +1,5 @@
 package i5.las2peer.services;
 
-import i5.las2peer.p2p.LocalNode;
-import i5.las2peer.security.ServiceAgentImpl;
-import i5.las2peer.security.UserAgentImpl;
-import i5.las2peer.services.databaseService.DatabaseService;
-import i5.las2peer.testing.MockAgentFactory;
-import i5.las2peer.api.p2p.ServiceNameVersion;
-import i5.las2peer.connectors.webConnector.WebConnector;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -16,6 +8,14 @@ import java.net.ServerSocket;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import i5.las2peer.api.p2p.ServiceNameVersion;
+import i5.las2peer.connectors.webConnector.WebConnector;
+import i5.las2peer.p2p.LocalNode;
+import i5.las2peer.security.ServiceAgentImpl;
+import i5.las2peer.security.UserAgentImpl;
+import i5.las2peer.services.databaseService.DatabaseService;
+import i5.las2peer.testing.MockAgentFactory;
 
 /**
  * Example Test Class demonstrating a basic JUnit test structure.
@@ -81,7 +81,6 @@ public class DatabaseServiceTest {
 		connector.start(node);
 		Thread.sleep(1000); // wait a second for the connector to become ready
 		testAgent = MockAgentFactory.getAdam(); // get a locked agent
-
 	}
 
 	/**
@@ -91,7 +90,6 @@ public class DatabaseServiceTest {
 	 */
 	@AfterClass
 	public static void shutDownServer() throws Exception {
-
 		connector.stop();
 		node.shutDown();
 
@@ -104,7 +102,6 @@ public class DatabaseServiceTest {
 		System.out.println("--------------");
 
 		System.out.println(logStream.toString());
-
 	}
 
 	@Test

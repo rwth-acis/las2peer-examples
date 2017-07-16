@@ -2,15 +2,6 @@ package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import i5.las2peer.api.p2p.ServiceNameVersion;
-import i5.las2peer.connectors.webConnector.WebConnector;
-import i5.las2peer.connectors.webConnector.client.ClientResponse;
-import i5.las2peer.connectors.webConnector.client.MiniClient;
-import i5.las2peer.p2p.LocalNode;
-import i5.las2peer.security.ServiceAgentImpl;
-import i5.las2peer.security.UserAgentImpl;
-import i5.las2peer.services.restService.RESTExampleService;
-import i5.las2peer.testing.MockAgentFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,6 +13,16 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import i5.las2peer.api.p2p.ServiceNameVersion;
+import i5.las2peer.connectors.webConnector.WebConnector;
+import i5.las2peer.connectors.webConnector.client.ClientResponse;
+import i5.las2peer.connectors.webConnector.client.MiniClient;
+import i5.las2peer.p2p.LocalNode;
+import i5.las2peer.security.ServiceAgentImpl;
+import i5.las2peer.security.UserAgentImpl;
+import i5.las2peer.services.restService.RESTExampleService;
+import i5.las2peer.testing.MockAgentFactory;
 
 /**
  * Example Test Class demonstrating a basic JUnit test structure.
