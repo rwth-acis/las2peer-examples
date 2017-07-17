@@ -64,7 +64,6 @@ public class DatabaseServiceTest {
 		connector = new WebConnector(true, 0, false, 0); // port: 0 => use system defined port
 		connector.setLogStream(new PrintStream(logStream));
 		connector.start(node);
-		Thread.sleep(1000); // wait a second for the connector to become ready
 		testAgent = MockAgentFactory.getAdam(); // get a locked agent
 	}
 
