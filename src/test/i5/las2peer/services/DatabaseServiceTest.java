@@ -1,6 +1,7 @@
 package i5.las2peer.services;
 
 import i5.las2peer.p2p.LocalNode;
+import i5.las2peer.p2p.LocalNodeManager;
 import i5.las2peer.security.ServiceAgentImpl;
 import i5.las2peer.security.UserAgentImpl;
 import i5.las2peer.services.databaseService.DatabaseService;
@@ -62,7 +63,7 @@ public class DatabaseServiceTest {
 		HTTP_PORT = getFreePort();
 
 		// start node
-		node = LocalNode.newNode();
+		node = new LocalNodeManager().newNode();
 		testAgent = MockAgentFactory.getAdam();
 		testAgent.unlock(testPass); // agent must be unlocked in order to be stored
 		node.storeAgent(testAgent);
@@ -79,7 +80,6 @@ public class DatabaseServiceTest {
 		connector = new WebConnector(true, HTTP_PORT, false, 1000);
 		connector.setLogStream(new PrintStream(logStream));
 		connector.start(node);
-		Thread.sleep(1000); // wait a second for the connector to become ready
 		testAgent = MockAgentFactory.getAdam(); // get a locked agent
 
 	}
@@ -97,8 +97,6 @@ public class DatabaseServiceTest {
 
 		connector = null;
 		node = null;
-
-		LocalNode.reset();
 
 		System.out.println("Connector-Log:");
 		System.out.println("--------------");

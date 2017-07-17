@@ -7,6 +7,7 @@ import i5.las2peer.connectors.webConnector.WebConnector;
 import i5.las2peer.connectors.webConnector.client.ClientResponse;
 import i5.las2peer.connectors.webConnector.client.MiniClient;
 import i5.las2peer.p2p.LocalNode;
+import i5.las2peer.p2p.LocalNodeManager;
 import i5.las2peer.security.ServiceAgentImpl;
 import i5.las2peer.security.UserAgentImpl;
 import i5.las2peer.services.restService.RESTExampleService;
@@ -60,13 +61,14 @@ public class RESTExampleServiceTest {
 	 * Called before the tests start.
 	 * 
 	 * Sets up the node and initializes connector and users that can be used throughout the tests.
+	 * @throws Exception 
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
 		HTTP_PORT = getFreePort();
 
 		// start node
-		node = LocalNode.newNode();
+		node = new LocalNodeManager().newNode();
 		testAgent = MockAgentFactory.getAdam();
 		testAgent.unlock(testPass); // agent must be unlocked in order to be stored
 		node.storeAgent(testAgent);
@@ -98,8 +100,6 @@ public class RESTExampleServiceTest {
 
 			connector = null;
 			node = null;
-
-			LocalNode.reset();
 
 			System.out.println("Connector-Log:");
 			System.out.println("--------------");

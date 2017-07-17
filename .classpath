@@ -9,8 +9,6 @@
 	<classpathentry kind="lib" path="service0bundle/commons-pool2-2.2.jar"/>
 	<classpathentry kind="lib" path="service0bundle/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry kind="lib" path="lib/las2peer-bundle-0.7-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/ant-optional-1.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/json-smart-1.3.1.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>
