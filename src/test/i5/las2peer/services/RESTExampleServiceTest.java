@@ -2,6 +2,16 @@ package i5.las2peer.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import i5.las2peer.api.p2p.ServiceNameVersion;
 import i5.las2peer.connectors.webConnector.WebConnector;
 import i5.las2peer.connectors.webConnector.client.ClientResponse;
@@ -13,17 +23,6 @@ import i5.las2peer.security.UserAgentImpl;
 import i5.las2peer.services.restService.RESTExampleService;
 import i5.las2peer.testing.MockAgentFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.ServerSocket;
-import java.util.HashMap;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 /**
  * Example Test Class demonstrating a basic JUnit test structure.
  *
@@ -31,7 +30,6 @@ import org.junit.Test;
 public class RESTExampleServiceTest {
 
 	private static final String HTTP_ADDRESS = "http://127.0.0.1";
-	private static int HTTP_PORT = WebConnector.DEFAULT_HTTP_PORT;
 
 	private static LocalNode node;
 	private static WebConnector connector;
@@ -46,17 +44,6 @@ public class RESTExampleServiceTest {
 
 	private static final String mainPath = "video/";
 
-	private static int getFreePort() {
-		int port = HTTP_PORT;
-		try {
-			ServerSocket socket = new ServerSocket(0);
-			port = socket.getLocalPort();
-			socket.close();
-		} catch (IOException e) {
-		}
-		return port;
-	}
-
 	/**
 	 * Called before the tests start.
 	 * 
@@ -65,8 +52,6 @@ public class RESTExampleServiceTest {
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
-		HTTP_PORT = getFreePort();
-
 		// start node
 		node = new LocalNodeManager().newNode();
 		testAgent = MockAgentFactory.getAdam();
@@ -82,7 +67,7 @@ public class RESTExampleServiceTest {
 		// start connector
 		logStream = new ByteArrayOutputStream();
 
-		connector = new WebConnector(true, HTTP_PORT, false, 1000);
+		connector = new WebConnector(true, 0, false, 0); // port: 0 => use system defined port
 		connector.setLogStream(new PrintStream(logStream));
 		connector.start(node);
 		Thread.sleep(1000); // wait a second for the connector to become ready
@@ -116,7 +101,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetUserName() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
@@ -127,7 +112,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testEcho() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		String content = "myContent";
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
@@ -141,7 +126,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetVideo() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
@@ -152,7 +137,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testCreateVideo() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
@@ -167,7 +152,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetActorList() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
@@ -178,7 +163,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetActor() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, HTTP_PORT);
+		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
