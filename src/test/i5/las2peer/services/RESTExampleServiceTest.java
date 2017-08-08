@@ -48,7 +48,8 @@ public class RESTExampleServiceTest {
 	 * Called before the tests start.
 	 * 
 	 * Sets up the node and initializes connector and users that can be used throughout the tests.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
