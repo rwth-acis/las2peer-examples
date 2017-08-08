@@ -22,8 +22,6 @@ import i5.las2peer.testing.MockAgentFactory;
  */
 public class DatabaseServiceTest {
 
-	private static final String HTTP_ADDRESS = "http://127.0.0.1";
-
 	private static LocalNode node;
 	private static WebConnector connector;
 	private static ByteArrayOutputStream logStream;
