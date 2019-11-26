@@ -1,6 +1,7 @@
 # las2peer-Examples
 
-Jenkins: [![Build Status](http://layers.dbis.rwth-aachen.de/jenkins/buildStatus/icon?job=las2peer Examples)](http://layers.dbis.rwth-aachen.de/jenkins/job/las2peer%20Examples/)
+[![Build Status](https://jenkins.dbis.rwth-aachen.de/buildStatus/icon?job=las2peer%20Examples)](https://jenkins.dbis.rwth-aachen.de/job/las2peer%20Examples/)
+
 
 A collection of examples demonstrating the usage of las2peer features. For more detailed descriptions, APIs and tutorials please visit the [Template Project's wiki](https://github.com/rwth-acis/las2peer-Template-Project/wiki).
 

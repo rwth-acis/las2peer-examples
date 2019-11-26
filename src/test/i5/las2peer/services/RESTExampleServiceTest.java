@@ -29,8 +29,6 @@ import i5.las2peer.testing.MockAgentFactory;
  */
 public class RESTExampleServiceTest {
 
-	private static final String HTTP_ADDRESS = "http://127.0.0.1";
-
 	private static LocalNode node;
 	private static WebConnector connector;
 	private static ByteArrayOutputStream logStream;
@@ -48,7 +46,8 @@ public class RESTExampleServiceTest {
 	 * Called before the tests start.
 	 * 
 	 * Sets up the node and initializes connector and users that can be used throughout the tests.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void startServer() throws Exception {
@@ -101,7 +100,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetUserName() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "username", "");
@@ -112,7 +111,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testEcho() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		String content = "myContent";
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
@@ -126,7 +125,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetVideo() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1", "");
@@ -137,7 +136,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testCreateVideo() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		String data = "{\"title\": \"Title\", \"description\": \"desc\", \"uri\": \"http://my.video/uri\"}";
@@ -152,7 +151,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetActorList() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor", "");
@@ -163,7 +162,7 @@ public class RESTExampleServiceTest {
 	@Test
 	public void testGetActor() {
 		MiniClient c = new MiniClient();
-		c.setAddressPort(HTTP_ADDRESS, connector.getHttpPort());
+		c.setConnectorEndpoint(connector.getHttpEndpoint());
 		c.setLogin(testAgent.getIdentifier(), testPass);
 
 		ClientResponse result = c.sendRequest("GET", mainPath + "1/actor/eljasper", "");
